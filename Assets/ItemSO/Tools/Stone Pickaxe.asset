@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cdfc5864aa867743860fa3052311202, type: 3}
+  m_Name: Stone Pickaxe
+  m_EditorClassIdentifier: 
+  itemID: 1
+  displayName: StonePickaxe
+  icon: {fileID: 0}
+  prefab: {fileID: 919132149155446097, guid: e0dced64d1121df44b68c7be24ef3dfb, type: 3}
+  durability: 50
+  power: 20
