@@ -25,6 +25,7 @@ public class MeleeData : WeaponComponentData
 public class SniperGunData : WeaponComponentData
 {
     public float headshotMultiplier;
+    public float damage = 50;
     public float zoomLevel;
     public float bulletSpeedOnSec;
     public Image ScopeUI;

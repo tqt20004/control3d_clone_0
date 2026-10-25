@@ -10,6 +10,7 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
     private float ZoomFOV = 20f; 
     private bool isZooming = false;
     private float fireRate = 1f;
+    private float damage = 1;
     public Image ScopeUI;
     public StatType BehaviorType
 
@@ -31,6 +32,7 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
     {
         ZoomFOV = sniperData.zoomLevel;
         fireRate = sniperData.bulletSpeedOnSec;
+        this.damage = sniperData.damage;
     }
     public void Execute(int action)
     {
@@ -64,9 +66,23 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
         Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if(Physics.Raycast(ray, out var hitInfo ,500f))
         {
-            if (hitInfo.collider != null) Debug.Log("got(name/distance/point)" + hitInfo.collider.name +" / " +hitInfo.distance + " / " + hitInfo.point);
-            else Debug.Log("Catch Nothing!!");
+            if (hitInfo.collider != null)
+            {
+                Debug.Log("got(name/distance/point)" + hitInfo.collider.name + " / " + hitInfo.distance + " / " + hitInfo.point);
+                IDamageable targetHealth = hitInfo.collider.GetComponentInParent<IDamageable>();
+                IKnockBack targetKnockback = hitInfo.collider.GetComponentInParent<IKnockBack>();
+                if(targetHealth != null) targetHealth.TakeDamage(damage);
+                if (targetKnockback != null)
+                {
+                    Vector3 knockDir = ray.direction;
+                    knockDir.y = 0.1f; // Lift it a bit to avoid sinking into the ground
+                    knockDir.Normalize();
+                    targetKnockback.ExecuteKnockBack(knockDir,90f);
+                }    
+            }
+            
         }
+        else Debug.Log("Catch Nothing!!");
     }
     bool CheckCamNullAndTake()
     {

@@ -33,12 +33,19 @@ public class UIManager : MonoBehaviour
     {
         // Đăng ký lắng nghe sự kiện từ SniperGunBehavior (khi ông thêm event vào)
         SniperGunBehavior.OnScopeChanged += ToggleScope;
+        EventBus.OnPlayerDied += SomeOneDied;
+    }
+
+    private void SomeOneDied(int obj)
+    {
+        Debug.Log("someOneDieddddd!!!");
     }
 
     private void OnDisable()
     {
         // Hủy đăng ký để tránh rò rỉ bộ nhớ
         SniperGunBehavior.OnScopeChanged -= ToggleScope;
+        EventBus.OnPlayerDied -= SomeOneDied;
     }
 
     /// <summary>

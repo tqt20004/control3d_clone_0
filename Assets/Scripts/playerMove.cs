@@ -2,14 +2,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class playerMove : MonoBehaviourPun
+public class playerMove : MonoBehaviourPun,IKnockBack
 {
     [Header("Góc nhìn & Chuột")]
     public float mouseSensitivity = 100f;
     public Transform playerCamera;
     private float xRotation = 0f;
+
+    Vector3 impactKBackForce;
 
     [Header("Di chuyển & Hoạt ảnh")]
     public float moveSpeed = 6f;
@@ -44,6 +47,14 @@ public class playerMove : MonoBehaviourPun
 
         
     }
+    private void OnEnable()
+    {
+        SniperGunBehavior.OnScopeChanged += PlayAnimationAiming;
+    }
+    private void OnDisable()
+    {
+        SniperGunBehavior.OnScopeChanged -= PlayAnimationAiming;
+    }
 
     void Update()
     {
@@ -51,6 +62,7 @@ public class playerMove : MonoBehaviourPun
         RotatePlayer();
         Move();
         ApplyGravity();
+        KnockBack();
     }
 
     private void ApplyGravity()
@@ -111,4 +123,42 @@ public class playerMove : MonoBehaviourPun
         // Đẩy viên thuốc đi bằng CharacterController
         controller.Move(dirMove * moveSpeed * Time.deltaTime);
     }
+    public void PlayAnimationAiming(bool isAiming)
+    {
+        if (animator == null) return;
+            animator.SetBool("isAiming",isAiming);
+    }
+    public void ExecuteKnockBack(Vector3 dir, float force)
+    {
+        // Send knockback to the owner of the PhotonView
+        if (photonView != null)
+        {
+            photonView.RPC(nameof(RPC_ApplyKnockBack), photonView.Owner, dir, force);
+        }
+        else
+        {
+            // NonNetwork case: Apply knockback alone
+            RPC_ApplyKnockBack(dir, force);
+        }
+    }
+    [PunRPC]
+    private void RPC_ApplyKnockBack(Vector3 dir, float force)
+    {
+        impactKBackForce = dir.normalized * force;
+        Debug.Log("Máy chủ sở hữu đã nhận lực: " + impactKBackForce);
+    }
+    public void KnockBack()
+    {
+        if(impactKBackForce.sqrMagnitude > 0.2f)
+        {
+            impactKBackForce = Vector3.Lerp(impactKBackForce, Vector3.zero, 2f * Time.deltaTime);
+            controller.Move(impactKBackForce * Time.deltaTime);
+            Debug.Log("ExecutingKnockBackkkk");
+        }
+        else
+        {
+            impactKBackForce = Vector3.zero;
+        }
+    }
+    
 }
