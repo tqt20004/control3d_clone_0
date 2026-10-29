@@ -3,10 +3,11 @@ using UnityEngine;
 public class PlayerWeaponManager : MonoBehaviour
 {
     [Header("Weapon Setup")]
+    public EffectConfig stunEffectCfg;
     public Transform handSocket;        // Kéo xương bàn tay của Player vào đây
     public GameObject weaponPrefab3D;   // Kéo Model 3D súng vào đây (hoặc để trống)
 
-    private IWeaponBehavior currentWeapon;
+    private IWeaponBehavior currentWeaponBehavior;
 
     private void Start()
     {
@@ -21,24 +22,27 @@ public class PlayerWeaponManager : MonoBehaviour
         sksData.bulletSpeedOnSec = 1f;
         sksData.headshotMultiplier = 2f;
 
+        if(stunEffectCfg != null)sksData.hitEffect = stunEffectCfg;
+
         // 👉 ĐÚNG 1 DÒNG ĂN TIỀN: Nhà máy ơi, tạo vũ khí cho tao!
-        currentWeapon = WeaponFactory.CreateWeapon(weaponPrefab3D, sksData, handSocket);
+        currentWeaponBehavior = WeaponFactory.CreateWeapon(weaponPrefab3D, sksData, handSocket);
+
     }
 
     private void Update()
     {
-        if (currentWeapon == null) return;
+        if (currentWeaponBehavior == null) return;
 
         // Chuột Trái -> Bắn (Action 1)
         if (Input.GetMouseButtonDown(0))
         {
-            currentWeapon.Execute(1);
+            currentWeaponBehavior.Execute(1);
         }
 
         // Chuột Phải -> Ngắm (Action 2)
         if (Input.GetMouseButtonDown(1))
         {
-            currentWeapon.Execute(2);
+            currentWeaponBehavior.Execute(2);
         }
     }
 }

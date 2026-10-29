@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,5 +12,7 @@ public class RoleConfig : ScriptableObject
 public enum Category_Stats
 {
     hp,
-    def
+    def,
+    moveSpeed,
+
 }

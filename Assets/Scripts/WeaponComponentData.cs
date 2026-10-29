@@ -12,6 +12,8 @@ public class AttackData : WeaponComponentData
 {
     public float damage;
     public float fireRate;
+
+    public EffectConfig hitEffect;
 }
 
 [System.Serializable]
@@ -19,6 +21,8 @@ public class MeleeData : WeaponComponentData
 {
     public float slashRange;
     public float attackSpeed;
+
+    public EffectConfig hitEffect;
 }
 
 [System.Serializable]
@@ -29,4 +33,6 @@ public class SniperGunData : WeaponComponentData
     public float zoomLevel;
     public float bulletSpeedOnSec;
     public Image ScopeUI;
+
+    public EffectConfig hitEffect;
 }

@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d747bab5266e8e5498673b7a22ca0da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 100
+  mouseSensitivity: 80
   playerCamera: {fileID: 3193934847765845383}
   moveSpeed: 10
   animator: {fileID: 1809793482264781285}
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94f0decda54571f4b9c581e6f3dfa1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stunEffectCfg: {fileID: 11400000, guid: c5f391d0db919dc45b98411225d72857, type: 2}
   handSocket: {fileID: 6763777620871382626}
   weaponPrefab3D: {fileID: 4290631200208459189, guid: 698506d38969c41418d26670f58968bc, type: 3}
 --- !u!114 &849205647586482613
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roleConfig: {fileID: 11400000, guid: 9905878d6d6e27f4a96d607e92218867, type: 2}
+  lookingUpData: {fileID: 11400000, guid: 95867c3c428a40b49a11177797f97bd5, type: 2}
 --- !u!1 &6155636621310881020
 GameObject:
   m_ObjectHideFlags: 0

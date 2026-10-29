@@ -12,8 +12,10 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
     private float fireRate = 1f;
     private float damage = 1;
     public Image ScopeUI;
-    public StatType BehaviorType
 
+    public EffectConfig effectConfig;
+
+    public StatType BehaviorType
     {
         get { return StatType.Sniper; }
     }
@@ -33,6 +35,7 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
         ZoomFOV = sniperData.zoomLevel;
         fireRate = sniperData.bulletSpeedOnSec;
         this.damage = sniperData.damage;
+        effectConfig = sniperData.hitEffect;
     }
     public void Execute(int action)
     {
@@ -71,14 +74,19 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
                 Debug.Log("got(name/distance/point)" + hitInfo.collider.name + " / " + hitInfo.distance + " / " + hitInfo.point);
                 IDamageable targetHealth = hitInfo.collider.GetComponentInParent<IDamageable>();
                 IKnockBack targetKnockback = hitInfo.collider.GetComponentInParent<IKnockBack>();
+                IGetEffect targetEffect = hitInfo.collider.GetComponentInParent<IGetEffect>();
                 if(targetHealth != null) targetHealth.TakeDamage(damage);
                 if (targetKnockback != null)
                 {
                     Vector3 knockDir = ray.direction;
                     knockDir.y = 0.1f; // Lift it a bit to avoid sinking into the ground
                     knockDir.Normalize();
-                    targetKnockback.ExecuteKnockBack(knockDir,90f);
-                }    
+                    targetKnockback.ExecuteKnockBack(knockDir,10f);
+                }
+                if (targetEffect != null)
+                {
+                    ApplyEff(targetEffect);
+                }
             }
             
         }
@@ -93,4 +101,11 @@ public class SniperGunBehavior : MonoBehaviour, IWeaponBehavior
         if (Camera != null) return true;
         return false;
     }
+    public void ApplyEff(IGetEffect target)
+    {
+        if (effectConfig == null) return;
+        target.ApplyEffect(effectConfig);
+    }
+
+
 }

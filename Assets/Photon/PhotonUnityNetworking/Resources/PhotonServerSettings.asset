@@ -41,6 +41,7 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - RPC_ApplyKnockBack
+  - API_Get_Eff_ByID_ReceiveEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 public static class WeaponFactory
 {
     // HÀM SẢN XUẤT VŨ KHÍ: Nhận Prefab 3D + Data -> Bàn giao vũ khí hoàn chỉnh
-    public static IWeaponBehavior CreateWeapon(GameObject weaponPrefab, WeaponComponentData data, Transform parentSocket)
+    public static IWeaponBehavior CreateWeapon(GameObject weaponPrefab, WeaponComponentData data, Transform parentSocket, EffectConfig effectConfig = null)
     {
         if (data == null)
         {
@@ -19,6 +19,19 @@ public static class WeaponFactory
             weaponInstance = Object.Instantiate(weaponPrefab, parentSocket);
             weaponInstance.transform.localPosition = new Vector3(0,0.3f,0);
             weaponInstance.transform.localRotation = Quaternion.Euler(-20f, -260f, 260f);
+
+            // 👉 THÊM ĐOẠN NÀY ĐỂ BẤT TỬ SCALE CHO MỌI MODEL:
+            if (parentSocket != null)
+            {
+                Vector3 pScale = parentSocket.lossyScale; // Lấy scale thực tế của xương tay
+                Vector3 origScale = weaponPrefab.transform.localScale; // Lấy scale gốc của cây súng skse
+                // Tự động bù trừ: Gặp tay bị teo 0.01 thì tự phóng to lên lại để hòa vốn!
+                weaponInstance.transform.localScale = new Vector3(
+                    origScale.x / pScale.x,
+                    origScale.y / pScale.y,
+                    origScale.z / pScale.z
+                );
+            }
         }
         else
         {

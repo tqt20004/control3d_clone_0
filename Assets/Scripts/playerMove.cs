@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.LowLevel;
 
 public class playerMove : MonoBehaviourPun,IKnockBack
 {
@@ -13,6 +14,7 @@ public class playerMove : MonoBehaviourPun,IKnockBack
     private float xRotation = 0f;
 
     Vector3 impactKBackForce;
+    PlayerComponent playerComp;
 
     [Header("Di chuyển & Hoạt ảnh")]
     public float moveSpeed = 6f;
@@ -25,6 +27,7 @@ public class playerMove : MonoBehaviourPun,IKnockBack
 
     void Start()
     {
+        playerComp = GetComponent<PlayerComponent>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
         //_______________//
         //AI_CODING
@@ -120,8 +123,18 @@ public class playerMove : MonoBehaviourPun,IKnockBack
         inputMove = inputMove.normalized;
         Vector3 dirMove = transform.TransformDirection(inputMove);
 
+        float currentSpeed = moveSpeed; // Giá trị dự phòng mặc định
+        if (playerComp != null)
+        {
+            var moveStat = playerComp.GetStatOfPlayerByCategory(Category_Stats.moveSpeed);
+            if (moveStat != null)
+            {
+                currentSpeed = moveStat.GetValue(); // Lấy tốc độ đã qua tính toán Stun/Slow!
+            }
+        }
+
         // Đẩy viên thuốc đi bằng CharacterController
-        controller.Move(dirMove * moveSpeed * Time.deltaTime);
+        controller.Move(dirMove * currentSpeed * Time.deltaTime);
     }
     public void PlayAnimationAiming(bool isAiming)
     {
@@ -153,7 +166,6 @@ public class playerMove : MonoBehaviourPun,IKnockBack
         {
             impactKBackForce = Vector3.Lerp(impactKBackForce, Vector3.zero, 2f * Time.deltaTime);
             controller.Move(impactKBackForce * Time.deltaTime);
-            Debug.Log("ExecutingKnockBackkkk");
         }
         else
         {
